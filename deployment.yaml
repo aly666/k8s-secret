@@ -2,6 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myapp
+  namespace: default
+  labels:
+    app: myapp
+  annotations:
+    reloader.stakater.com/auto: "true"   # 👉 agar Reloader tahu ini harus di-restart bila secret/config berubah
 spec:
   replicas: 1
   selector:
@@ -13,9 +18,19 @@ spec:
         app: myapp
     spec:
       containers:
-      - name: myapp
-        image: nginx
-        envFrom:
-        - secretRef:
-            name: myapp-secret
+        - name: myapp
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-secret     # 👉 secret yang dibuat oleh ESO dari Vault
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-secret
+                  key: password
 
