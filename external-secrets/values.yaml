@@ -1,0 +1,8 @@
+# values.yaml untuk External Secrets Operator
+
+# Instalasi CRD secara otomatis
+installCRDs: true
+
+# Namespace tempat External Secrets akan dijalankan
+namespaceOverride: external-secrets
+
